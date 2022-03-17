@@ -1,4 +1,6 @@
-[servers]
+[web_servers]
 srv1
+[db_servers]
 srv2
+[file_servers]
 srv3
