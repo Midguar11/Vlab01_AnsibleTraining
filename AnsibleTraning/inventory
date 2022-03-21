@@ -4,3 +4,5 @@ srv1
 srv2
 [file_servers]
 srv3
+[workstations]
+workstation
