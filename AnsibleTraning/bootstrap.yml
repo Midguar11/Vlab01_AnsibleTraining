@@ -1,0 +1,50 @@
+ # Starter playbook new server and create user
+
+ - hosts: all
+   become: true
+   pre_tasks:
+
+   - name: install updates (CentOS)
+     tags: always 
+     dnf:
+       update_only: yes
+       update_cache: yes
+     changed_when: false  # a cash update cant check
+     when: ansible_distribution == "CentOS"
+
+   - name: install updates (Ubuntu)
+     tags: always 
+     apt:
+       upgrade: dist
+       update_cache: yes
+     changed_when: false  
+     when: ansible_distribution == "Ubuntu"
+
+#Create user
+ - hosts: all
+   become: true
+   tasks:
+
+   - name: create user 
+     tags: always
+     user:
+       name: simone
+       groups: root #Add root grp
+
+# Add ssh for user
+   - name: add ssh key for simone
+     tags: always
+     authorized_key:
+       user: simone
+       #ssh key copy, cheking actual: ls -la ~/.ssh/ and use: cat ~/.ssh/xyyyy
+       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIWn3u5u7o9vLk3eF0mp5y76gqWxu/B/T xcxOXX+xPCW Vlab01 default" 
+         
+ #user can use sudo command ,it doesn't need passworld        
+   - name: add sudoers file for simone
+     tags: always
+     copy:
+       src: sudoer_simone
+       dest: /etc/sudoers.d/simone
+       owner: root
+       group: root
+       mode: 0440
