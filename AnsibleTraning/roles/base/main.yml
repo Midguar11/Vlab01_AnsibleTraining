@@ -1,0 +1,6 @@
+   - name: add ssh key for simone
+     tags: always
+     authorized_key:
+       user: simone
+       #ssh key copy, cheking actual: ls -la ~/.ssh/ and use: cat ~/.ssh/xyyyy
+       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIWn3u5u7o9vLk3eF0mp5y76gqWxu/B/T xcxOXX+xPCW Vlab01 default"  
