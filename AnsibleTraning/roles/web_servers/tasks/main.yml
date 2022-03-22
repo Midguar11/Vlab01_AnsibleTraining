@@ -19,16 +19,9 @@
      lineinfile:
        path: /etc/httpd/conf/httpd.conf
        regexp: '^ServerAdmin' #this ceking 
-       line: ServerAdmin somebody@somewhere.net # replace line this is line
+       line: ServerAdmin somebody@somewhere.com # replace line this is line
      when: ansible_distribution == "CentOS"
-     register: bolean1 # if multiple cheking changed use uniq name this variable
-
-   - name: restart httpd (CentOS and Ubuntu)
-     tags: apache,httpd
-     service:
-       name: "{{ apache_service }}"
-       state: restarted
-     when: bolean1.changed        
+     notify: restart httpd and apache (CentOS and Ubuntu) # this notify name handler name. It is command the handlers use
 
 # copy file
    - name: copy html file for site
@@ -39,4 +32,4 @@
        owner: root
        group: root
        mode: 0644     
-       # use host vars "service and package name var name: and package real name. Look at host_vars fooder"
+   

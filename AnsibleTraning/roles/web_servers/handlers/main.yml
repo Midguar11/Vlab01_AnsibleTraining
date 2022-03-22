@@ -1,0 +1,4 @@
+- name: restart httpd and apache (CentOS and Ubuntu)
+  service:
+    name: "{{ apache_service }}"
+    state: restarted
