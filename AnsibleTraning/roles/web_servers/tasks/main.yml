@@ -1,21 +1,36 @@
-   - name: install httpd package (CentOS)
-     tags: apache,centos,httpd
-     dnf:
+   - name: install apache and php package (CentOS,Ubuntu)
+     tags: apache,php,httpd
+     package:
        name:
-         - httpd
-         - php
+         - "{{ apache_package_name }}"
+         - "{{ php_package_name }}"
        state: latest
-     when: ansible_distribution == "CentOS"
-
-   - name: install apache2 package (Ubuntu)
-     tags: apache,apache2,ubuntu
-     apt:
-       name:
-         - apache2
-         - libapache2-mod-php
-       state: latest
-     when: ansible_distribution == "Ubuntu"
      
+
+   - name: start and anable apache service
+     tags: apache,httpd
+     service:
+       name: "{{ apache_service }}"
+       state: started
+       enabled: yes 
+          
+   - name: change e-mail address for admin
+     tags: apache,centos,httpd
+     lineinfile:
+       path: /etc/httpd/conf/httpd.conf
+       regexp: '^ServerAdmin' #this ceking 
+       line: ServerAdmin somebody@somewhere.net # replace line this is line
+     when: ansible_distribution == "CentOS"
+     register: bolean1 # if multiple cheking changed use uniq name this variable
+
+   - name: restart httpd (CentOS and Ubuntu)
+     tags: apache,httpd
+     service:
+       name: "{{ apache_service }}"
+       state: restarted
+     when: bolean1.changed        
+
+# copy file
    - name: copy html file for site
      tags: apache,apache,apache2,httpd
      copy:
@@ -23,4 +38,5 @@
        dest: /var/www/html/index.html
        owner: root
        group: root
-       mode: 0644  
+       mode: 0644     
+       # use host vars "service and package name var name: and package real name. Look at host_vars fooder"
